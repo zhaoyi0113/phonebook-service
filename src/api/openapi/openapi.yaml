@@ -1,0 +1,245 @@
+openapi: 3.0.1
+info:
+  contact:
+    email: apiteam@swagger.io
+  description: This is phonebook service
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Phonebook
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: https://phonebook.swagger.io/v2
+- url: http://phonebook.swagger.io/v2
+tags:
+- description: Everything about your phonebook
+  externalDocs:
+    description: Find out more
+    url: http://swagger.io
+  name: phonebook
+paths:
+  /contact:
+    post:
+      operationId: add_contact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+        description: Contact object that needs to be added to the store
+        required: true
+      responses:
+        405:
+          content: {}
+          description: Invalid input
+      security:
+      - phonebook_auth:
+        - write:contacts
+        - read:contacts
+      summary: Add a new contact
+      tags:
+      - phonebook
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: api.controllers.phonebook_controller
+  /contact/findByEmail:
+    get:
+      description: find contact by email address.
+      operationId: find_contacts_by_email
+      parameters:
+      - description: Email to filter by
+        in: query
+        name: email
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Contact'
+                type: array
+          description: successful operation
+        400:
+          content: {}
+          description: Invalid tag value
+      security:
+      - phonebook_auth:
+        - write:contacts
+        - read:contacts
+      summary: Finds contact by email
+      tags:
+      - phonebook
+      x-openapi-router-controller: api.controllers.phonebook_controller
+  /contact/findByName:
+    get:
+      description: find contact by name
+      operationId: find_contacts_by_name
+      parameters:
+      - description: Contact name that need to be considered for filter
+        in: query
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Contact'
+                type: array
+          description: successful operation
+        400:
+          content: {}
+          description: Invalid status value
+      security:
+      - phonebook_auth:
+        - write:contacts
+        - read:contacts
+      summary: Finds Contact by name
+      tags:
+      - phonebook
+      x-openapi-router-controller: api.controllers.phonebook_controller
+  /contact/{contactId}:
+    delete:
+      operationId: delete_contact
+      parameters:
+      - in: header
+        name: api_key
+        schema:
+          type: string
+      - description: Contact id to delete
+        in: path
+        name: contactId
+        required: true
+        schema:
+          type: string
+      responses:
+        400:
+          content: {}
+          description: Invalid ID supplied
+        404:
+          content: {}
+          description: Contact not found
+      security:
+      - phonebook_auth:
+        - write:contacts
+        - read:contacts
+      summary: Deletes a contact
+      tags:
+      - phonebook
+      x-openapi-router-controller: api.controllers.phonebook_controller
+    get:
+      description: Returns a single contact
+      operationId: get_contact_by_id
+      parameters:
+      - description: ID of contact to return
+        in: path
+        name: contactId
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+          description: successful operation
+        400:
+          content: {}
+          description: Invalid ID supplied
+        404:
+          content: {}
+          description: Contact not found
+      security:
+      - api_key: []
+      summary: Find contact by ID
+      tags:
+      - phonebook
+      x-openapi-router-controller: api.controllers.phonebook_controller
+    put:
+      operationId: update_contact_with_form
+      parameters:
+      - description: ID of contact that needs to be updated
+        in: path
+        name: contactId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Contact'
+        description: Contact object that needs to be added
+        required: true
+      responses:
+        405:
+          content: {}
+          description: Invalid input
+      security:
+      - phonebook_auth:
+        - write:contacts
+        - read:contacts
+      summary: Updates a contact in phonebook
+      tags:
+      - phonebook
+      x-codegen-request-body-name: body
+      x-openapi-router-controller: api.controllers.phonebook_controller
+components:
+  schemas:
+    Contact:
+      example:
+        firstName: firstName
+        lastName: lastName
+        password: password
+        userStatus: 6
+        phone: phone
+        id: 0
+        email: email
+        username: username
+      properties:
+        id:
+          format: int64
+          type: integer
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        userStatus:
+          description: User Status
+          format: int32
+          type: integer
+      type: object
+  securitySchemes:
+    phonebook_auth:
+      flows:
+        implicit:
+          authorizationUrl: http://phonebook.swagger.io/oauth/dialog
+          scopes:
+            write:contacts: modify contact in your account
+            read:contacts: read your contact
+      type: oauth2
+      x-tokenInfoFunc: api.controllers.security_controller_.info_from_phonebook_auth
+      x-scopeValidateFunc: api.controllers.security_controller_.validate_scope_phonebook_auth
+    api_key:
+      in: header
+      name: api_key
+      type: apiKey
+      x-apikeyInfoFunc: api.controllers.security_controller_.info_from_api_key

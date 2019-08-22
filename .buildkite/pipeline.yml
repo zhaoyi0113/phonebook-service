@@ -1,0 +1,124 @@
+env:
+  REMOTE_STATE_NAME: shared-app-infra
+
+steps:
+  - label: ":python: Test"
+    command: make test
+    artifact_paths: "reports/*"
+    agents:
+      queue: build.linux
+
+  - wait
+
+  - label: ":docker: Build & Push"
+    command: ci/docker-build-and-push
+    branches: master
+    agents:
+      queue: build.linux
+
+  - wait
+
+  - label: ":terraform: Deploy :flag-au:"
+    command: ci/deploy-tf
+    branches: master
+    env:
+      DEPLOY_ENV: staging-au
+    agents:
+      queue: marketdata-staging-au.linux
+    
+  # - block: ":terraform: Staging (Regional)? :flags:"
+  #   branches: master
+  
+  # - label: ":terraform: Deploy :flag-gb:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: staging-uk
+  #   agents:
+  #     queue: marketdata-staging-uk.linux
+
+  # - label: ":terraform: Deploy :flag-ca:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: staging-ca
+  #   agents:
+  #     queue: marketdata-staging-ca.linux
+
+  # - label: ":terraform: Deploy :flag-za:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: staging-za
+  #   agents:
+  #     queue: marketdata-staging-za.linux
+
+  # - block: ":terraform: UAT? :green_button:"
+  #   branches: master
+
+  # - label: ":terraform: Deploy :flag-au:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: uat-au
+  #   agents:
+  #     queue: marketdata-uat-au.linux
+
+  # - label: ":terraform: Deploy :flag-gb:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: uat-uk
+  #   agents:
+  #     queue: marketdata-uat-uk.linux
+
+  # - label: ":terraform: Deploy :flag-ca:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: uat-ca
+  #   agents:
+  #     queue: marketdata-uat-ca.linux
+
+  # - label: ":terraform: Deploy :flag-za:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: uat-za
+  #   agents:
+  #     queue: marketdata-uat-za.linux
+
+  # - block: ":terraform: Production? :red_button:"
+  #   branches: master
+
+  # - label: ":terraform: Deploy :flag-au:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: production-au
+  #   agents:
+  #     queue: marketdata-production-au.linux
+
+  # - label: ":terraform: Deploy :flag-gb:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: production-uk
+  #   agents:
+  #     queue: marketdata-production-uk.linux
+
+  # - label: ":terraform: Deploy :flag-ca:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: production-ca
+  #   agents:
+  #     queue: marketdata-production-ca.linux
+  
+  # - label: ":terraform: Deploy :flag-za:"
+  #   command: ci/deploy-tf
+  #   branches: master
+  #   env:
+  #     DEPLOY_ENV: production-za
+  #   agents:
+  #     queue: marketdata-production-za.linux

@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  dev:
+    build:
+      context: .
+      args:
+        - PYTHON_ENV=development
+    environment:
+      - APP_NAME=phonebook-service
+    volumes:
+      - "./reports:/app/reports"

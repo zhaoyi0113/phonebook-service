@@ -1,0 +1,6 @@
+[submodule "ci"]
+	path = ci
+	url = git@github.com:oneiress/ci-scripts.git
+[submodule "ca-roots"]
+	path = ca-roots
+	url = git@github.com:oneiress/ca-roots.git
