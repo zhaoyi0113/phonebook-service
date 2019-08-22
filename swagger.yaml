@@ -9,14 +9,14 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "phonebook.swagger.io"
+host: "localhost:9301"
 basePath: "/v2"
 tags:
 - name: "phonebook"
   description: "Everything about your phonebook"
   externalDocs:
     description: "Find out more"
-    url: "http://swagger.io"
+    url: "http://localhost:9301"
 schemes:
 - "https"
 - "http"

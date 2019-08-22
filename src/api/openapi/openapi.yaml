@@ -13,8 +13,7 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-- url: https://phonebook.swagger.io/v2
-- url: http://phonebook.swagger.io/v2
+- url: http://localhost:9301/v2
 tags:
 - description: Everything about your phonebook
   externalDocs:
@@ -36,13 +35,9 @@ paths:
         405:
           content: {}
           description: Invalid input
-      security:
-      - phonebook_auth:
-        - write:contacts
-        - read:contacts
       summary: Add a new contact
       tags:
-      - phonebook
+        - phonebook
       x-codegen-request-body-name: body
       x-openapi-router-controller: api.controllers.phonebook_controller
   /contact/findByEmail:
@@ -68,10 +63,6 @@ paths:
         400:
           content: {}
           description: Invalid tag value
-      security:
-      - phonebook_auth:
-        - write:contacts
-        - read:contacts
       summary: Finds contact by email
       tags:
       - phonebook
@@ -99,10 +90,6 @@ paths:
         400:
           content: {}
           description: Invalid status value
-      security:
-      - phonebook_auth:
-        - write:contacts
-        - read:contacts
       summary: Finds Contact by name
       tags:
       - phonebook
@@ -128,10 +115,6 @@ paths:
         404:
           content: {}
           description: Contact not found
-      security:
-      - phonebook_auth:
-        - write:contacts
-        - read:contacts
       summary: Deletes a contact
       tags:
       - phonebook
@@ -159,8 +142,6 @@ paths:
         404:
           content: {}
           description: Contact not found
-      security:
-      - api_key: []
       summary: Find contact by ID
       tags:
       - phonebook
@@ -185,10 +166,6 @@ paths:
         405:
           content: {}
           description: Invalid input
-      security:
-      - phonebook_auth:
-        - write:contacts
-        - read:contacts
       summary: Updates a contact in phonebook
       tags:
       - phonebook
@@ -227,19 +204,3 @@ components:
           format: int32
           type: integer
       type: object
-  securitySchemes:
-    phonebook_auth:
-      flows:
-        implicit:
-          authorizationUrl: http://phonebook.swagger.io/oauth/dialog
-          scopes:
-            write:contacts: modify contact in your account
-            read:contacts: read your contact
-      type: oauth2
-      x-tokenInfoFunc: api.controllers.security_controller_.info_from_phonebook_auth
-      x-scopeValidateFunc: api.controllers.security_controller_.validate_scope_phonebook_auth
-    api_key:
-      in: header
-      name: api_key
-      type: apiKey
-      x-apikeyInfoFunc: api.controllers.security_controller_.info_from_api_key
