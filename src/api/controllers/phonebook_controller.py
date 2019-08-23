@@ -94,7 +94,15 @@ def find_contacts_by_name(name):  # noqa: E501
 
     :rtype: List[Contact]
     """
-    return 'do some magic!'
+    session = Session()
+    try:
+        contacts = session.query(DBContact).filter(DBContact.username == name).all()
+        return util.alchemy_to_json(contacts)
+    except Exception as error:
+        print(error)
+    finally:
+        session.close()
+    return abort(400, "failed to find contact by name" + name)
 
 
 def get_contact_by_id(contact_id):  # noqa: E501
@@ -107,8 +115,15 @@ def get_contact_by_id(contact_id):  # noqa: E501
 
     :rtype: Contact
     """
-    return 'do some magic!'
-
+    session = Session()
+    try:
+        contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
+        return util.alchemy_to_json(contact)
+    except Exception as error:
+        print(error)
+    finally:
+        session.close()
+    return abort(400, "failed to find contact by id " + contact_id)
 
 def update_contact_with_form(contact_id, id=None, username=None, first_name=None, last_name=None, email=None, password=None, phone=None, user_status=None):  # noqa: E501
     """Updates a contact in phonebook
