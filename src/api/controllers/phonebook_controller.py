@@ -1,7 +1,6 @@
 import connexion
 import six
 
-from api.models.contact import Contact  # noqa: E501
 from api import util
 from api.models.db_contact import DBContact
 from api.models.db import Session
