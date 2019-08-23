@@ -5,6 +5,5 @@ CREATE TABLE contact (
     last_name VARCHAR(20),
     email   VARCHAR(40),
     pwd VARCHAR(16),
-    phone VARCHAR(20),
-    user_status VARCHAR(10)
+    phone VARCHAR(20)
 );

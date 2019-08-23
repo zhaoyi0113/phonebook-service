@@ -7,6 +7,9 @@ services:
         - PYTHON_ENV=development
     environment:
       - APP_NAME=phonebook-service
+      - POSTGRES_DB=phonebook
+      - POSTGRES_USER=phonebook
+      - POSTGRES_PASSWORD=123456
     volumes:
       - "./reports:/app/reports"
     depends_on:

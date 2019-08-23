@@ -3,6 +3,8 @@ import six
 
 from api.models.contact import Contact  # noqa: E501
 from api import util
+from api.models.db_contact import DBContact
+from api.models.db import Session
 
 
 def add_contact(body):  # noqa: E501
@@ -16,8 +18,19 @@ def add_contact(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        body = Contact.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+        session = Session()
+        print(connexion.request.get_json())
+        body = connexion.request.get_json()
+        # body = DBContact.from_dict(connexion.request.get_json())  # noqa: E501
+        contact = DBContact(body['username'], body['firstName'], body['lastName'], body['email'], body['password'], body['phone'])
+        session.add(contact)
+        session.commit()
+
+        contacts = session.query(DBContact).all()
+        print('contacts len ', len(contacts))
+        session.close()
+        return 'success'
+    return 'something wrong!'
 
 
 def delete_contact(contact_id, api_key=None):  # noqa: E501
