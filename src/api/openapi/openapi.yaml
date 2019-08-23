@@ -171,8 +171,8 @@ components:
   schemas:
     Contact:
       example:
-        firstName: firstName
-        lastName: lastName
+        first_name: first_name
+        last_name: last_name
         password: password
         userStatus: 6
         phone: phone
@@ -185,9 +185,9 @@ components:
           type: integer
         username:
           type: string
-        firstName:
+        first_name:
           type: string
-        lastName:
+        last_name:
           type: string
         email:
           type: string

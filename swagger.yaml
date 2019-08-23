@@ -206,9 +206,9 @@ definitions:
         format: "int64"
       username:
         type: "string"
-      firstName:
+      first_name:
         type: "string"
-      lastName:
+      last_name:
         type: "string"
       email:
         type: "string"

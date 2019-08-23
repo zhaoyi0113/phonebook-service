@@ -23,7 +23,7 @@ def add_contact(body):  # noqa: E501
             print(connexion.request.get_json())
             body = connexion.request.get_json()
             # body = DBContact.from_dict(connexion.request.get_json())  # noqa: E501
-            contact = DBContact(body['username'], body['firstName'], body['lastName'], body['email'], body['password'], body['phone'])
+            contact = DBContact(body['username'], body['first_name'], body['last_name'], body['email'], body['password'], body['phone'])
             session.add(contact)
             session.commit()
             session.refresh(contact)
@@ -151,27 +151,13 @@ def update_contact_with_form(contact_id, body):
 
     :rtype: None
     """
-    print(body)
     session = Session()
     try:
         contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
         body = connexion.request.get_json()
-        print(body)
-        username = body['username']
-        first_name = body['firstName']
-        email = body['email']
-        last_name = body['lastName']
-        phone = body['phone']
-        if username != None:
-            contact.username = username
-        if first_name != None:
-            contact.first_name = first_name
-        if last_name != None:
-            contact.last_name = last_name
-        if email != None:
-            contact.email = email
-        if phone != None:
-            contact.phone = phone
+        for k, v in body.items():
+            if v is not None:
+                contact.__setattr__(k, v)
         session.commit()
         return util.alchemy_to_json(contact)
     except Exception as error:
