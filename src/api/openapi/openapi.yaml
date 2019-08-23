@@ -153,7 +153,7 @@ paths:
           type: string
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               $ref: '#/components/schemas/Contact'
         description: Contact object that needs to be added

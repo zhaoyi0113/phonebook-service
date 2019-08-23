@@ -125,7 +125,7 @@ def get_contact_by_id(contact_id):  # noqa: E501
         session.close()
     return abort(400, "failed to find contact by id " + contact_id)
 
-def update_contact_with_form(contact_id, id=None, username=None, first_name=None, last_name=None, email=None, password=None, phone=None, user_status=None):  # noqa: E501
+def update_contact_with_form(contact_id, body):
     """Updates a contact in phonebook
 
      # noqa: E501
@@ -151,16 +151,31 @@ def update_contact_with_form(contact_id, id=None, username=None, first_name=None
 
     :rtype: None
     """
+    print(body)
     session = Session()
     try:
         contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
+        body = connexion.request.get_json()
+        print(body)
+        username = body['username']
+        first_name = body['firstName']
+        email = body['email']
+        last_name = body['lastName']
+        phone = body['phone']
         if username != None:
             contact.username = username
         if first_name != None:
             contact.first_name = first_name
+        if last_name != None:
+            contact.last_name = last_name
+        if email != None:
+            contact.email = email
+        if phone != None:
+            contact.phone = phone
         session.commit()
         return util.alchemy_to_json(contact)
     except Exception as error:
+        print('failed to update database')
         print(error)
     finally:
         session.close()
