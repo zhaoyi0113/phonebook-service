@@ -151,4 +151,17 @@ def update_contact_with_form(contact_id, id=None, username=None, first_name=None
 
     :rtype: None
     """
-    return 'do some magic!'
+    session = Session()
+    try:
+        contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
+        if username != None:
+            contact.username = username
+        if first_name != None:
+            contact.first_name = first_name
+        session.commit()
+        return util.alchemy_to_json(contact)
+    except Exception as error:
+        print(error)
+    finally:
+        session.close()
+    return abort(400, 'failed to update')
