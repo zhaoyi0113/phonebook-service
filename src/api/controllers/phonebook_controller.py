@@ -73,7 +73,15 @@ def find_contacts_by_email(email):  # noqa: E501
 
     :rtype: List[Contact]
     """
-    return 'do some magic!'
+    session = Session()
+    try:
+        contacts = session.query(DBContact).filter(DBContact.email == email).all()
+        return util.alchemy_to_json(contacts)
+    except Exception as error:
+        print(error)
+    finally:
+        session.close()
+    return abort(400, "failed to find contact by email " + email)
 
 
 def find_contacts_by_name(name):  # noqa: E501
