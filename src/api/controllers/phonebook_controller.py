@@ -5,7 +5,7 @@ from api.models.contact import Contact  # noqa: E501
 from api import util
 from api.models.db_contact import DBContact
 from api.models.db import Session
-
+from flask import abort
 
 def add_contact(body):  # noqa: E501
     """Add a new contact
@@ -18,19 +18,23 @@ def add_contact(body):  # noqa: E501
     :rtype: None
     """
     if connexion.request.is_json:
-        session = Session()
-        print(connexion.request.get_json())
-        body = connexion.request.get_json()
-        # body = DBContact.from_dict(connexion.request.get_json())  # noqa: E501
-        contact = DBContact(body['username'], body['firstName'], body['lastName'], body['email'], body['password'], body['phone'])
-        session.add(contact)
-        session.commit()
-
-        contacts = session.query(DBContact).all()
-        print('contacts len ', len(contacts))
-        session.close()
-        return 'success'
-    return 'something wrong!'
+        try:
+            session = Session()
+            print(connexion.request.get_json())
+            body = connexion.request.get_json()
+            # body = DBContact.from_dict(connexion.request.get_json())  # noqa: E501
+            contact = DBContact(body['username'], body['firstName'], body['lastName'], body['email'], body['password'], body['phone'])
+            session.add(contact)
+            session.commit()
+            session.refresh(contact)
+            print(contact)
+            return contact.id
+        except Exception as error:
+            print('save to database failed')
+            print(error)
+        finally:
+            session.close()
+    return abort(400, 'something wrong!')
 
 
 def delete_contact(contact_id, api_key=None):  # noqa: E501
@@ -45,7 +49,18 @@ def delete_contact(contact_id, api_key=None):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+    print('delete contact ', contact_id)
+    session = Session()
+    try:
+        contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
+        session.delete(contact)
+        session.commit()
+        return 'success'
+    except Exception as error:
+        print(error)
+    finally:
+        session.close()
+    return abort(400, 'failed to delete contact ' + contact_id)
 
 
 def find_contacts_by_email(email):  # noqa: E501

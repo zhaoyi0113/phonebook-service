@@ -98,10 +98,6 @@ paths:
     delete:
       operationId: delete_contact
       parameters:
-      - in: header
-        name: api_key
-        schema:
-          type: string
       - description: Contact id to delete
         in: path
         name: contactId
