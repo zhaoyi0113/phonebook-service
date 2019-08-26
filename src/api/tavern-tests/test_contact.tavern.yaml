@@ -35,3 +35,23 @@ stages:
       method: GET
     response:
       status_code: 200
+  - name: Make sure we can find contact by ID
+    request:
+      url: "{url:s}/{contact_id:d}"
+      method: GET
+    response:
+      status_code: 200
+  - name: Make sure we can update a contact
+    request:
+      url: "{url:s}/{contact_id:d}"
+      method: PUT
+      json:
+        phone: "222222"
+    response:
+      status_code: 200
+  - name: Make sure we can delete a contact
+    request:
+      url: "{url:s}/{contact_id:d}"
+      method: DELETE
+    response:
+      status_code: 200
