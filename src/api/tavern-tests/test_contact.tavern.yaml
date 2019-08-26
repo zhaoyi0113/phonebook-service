@@ -1,0 +1,23 @@
+test_name: Test phonebook service
+
+stages:
+  - name: Make sure we can create new contact
+    request:
+     url: http://localhost:8080/v2/contact
+     method: POST
+     json:
+      username: testUser
+      first_name: first
+      last_name: last
+      email: test@email.com
+      password: "123456"
+      phone: "111111"
+    response:
+     status_code: 200
+     headers:
+      content-type: application/json
+  - name: Make sure we can find contact by email
+    request:
+      url: http://localhost:8080/v2/contact
+      method: GET
+      

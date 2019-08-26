@@ -2,11 +2,11 @@
 
 from __future__ import absolute_import
 import unittest
-
+import logging
 from flask import json
 from six import BytesIO
 
-from api.models.contact import Contact  # noqa: E501
+from api.models.db_contact import DBContact  # noqa: E501
 from api.test import BaseTestCase
 
 
@@ -19,8 +19,8 @@ class TestPhonebookController(BaseTestCase):
         Add a new contact
         """
         body = {
-  "firstName" : "firstName",
-  "lastName" : "lastName",
+  "first_name" : "first_name",
+  "last_name" : "last_name",
   "password" : "password",
   "userStatus" : 6,
   "phone" : "phone",
@@ -38,9 +38,28 @@ class TestPhonebookController(BaseTestCase):
             headers=headers,
             data=json.dumps(body),
             content_type='application/json')
+        TestPhonebookController.contact_id = response.data.decode('utf-8')
+        logging.getLogger('tests').info('contact id = '+ self.contact_id)
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+
+    def test_get_contact_by_id(self):
+        """Test case for get_contact_by_id
+
+        Find contact by ID
+        """
+        headers = { 
+            'Accept': 'application/json',
+            'api_key': 'special-key',
+        }
+        response = self.client.open(
+            '/v2/contact/{contact_id}'.format(contact_id=TestPhonebookController.contact_id),
+            method='GET',
+            headers=headers)
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+                       
     def test_delete_contact(self):
         """Test case for delete_contact
 
@@ -50,8 +69,9 @@ class TestPhonebookController(BaseTestCase):
             'api_key': 'api_key_example',
             'Authorization': 'Bearer special-key',
         }
+        logging.getLogger('tests').info('delete contact id ' + TestPhonebookController.contact_id)
         response = self.client.open(
-            '/v2/contact/{contact_id}'.format(contact_id='contact_id_example'),
+            '/v2/contact/{contact_id}'.format(contact_id=TestPhonebookController.contact_id),
             method='DELETE',
             headers=headers)
         self.assert200(response,
@@ -93,48 +113,33 @@ class TestPhonebookController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_get_contact_by_id(self):
-        """Test case for get_contact_by_id
 
-        Find contact by ID
-        """
-        headers = { 
-            'Accept': 'application/json',
-            'api_key': 'special-key',
-        }
-        response = self.client.open(
-            '/v2/contact/{contact_id}'.format(contact_id='contact_id_example'),
-            method='GET',
-            headers=headers)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+    # @unittest.skip("application/x-www-form-urlencoded not supported by Connexion")
+    # def test_update_contact_with_form(self):
+    #     """Test case for update_contact_with_form
 
-    @unittest.skip("application/x-www-form-urlencoded not supported by Connexion")
-    def test_update_contact_with_form(self):
-        """Test case for update_contact_with_form
-
-        Updates a contact in phonebook
-        """
-        headers = { 
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Bearer special-key',
-        }
-        data = dict(id=56,
-                    username='username_example',
-                    first_name='first_name_example',
-                    last_name='last_name_example',
-                    email='email_example',
-                    password='password_example',
-                    phone='phone_example',
-                    user_status=56)
-        response = self.client.open(
-            '/v2/contact/{contact_id}'.format(contact_id='contact_id_example'),
-            method='PUT',
-            headers=headers,
-            data=data,
-            content_type='application/x-www-form-urlencoded')
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+    #     Updates a contact in phonebook
+    #     """
+    #     headers = { 
+    #         'Content-Type': 'application/x-www-form-urlencoded',
+    #         'Authorization': 'Bearer special-key',
+    #     }
+    #     data = dict(id=56,
+    #                 username='username_example',
+    #                 first_name='first_name_example',
+    #                 last_name='last_name_example',
+    #                 email='email_example',
+    #                 password='password_example',
+    #                 phone='phone_example',
+    #                 user_status=56)
+    #     response = self.client.open(
+    #         '/v2/contact/{contact_id}'.format(contact_id='contact_id_example'),
+    #         method='PUT',
+    #         headers=headers,
+    #         data=data,
+    #         content_type='application/x-www-form-urlencoded')
+    #     self.assert200(response,
+    #                    'Response body is : ' + response.data.decode('utf-8'))
 
 
 if __name__ == '__main__':

@@ -19,14 +19,12 @@ def add_contact(body):  # noqa: E501
     if connexion.request.is_json:
         try:
             session = Session()
-            print(connexion.request.get_json())
             body = connexion.request.get_json()
             # body = DBContact.from_dict(connexion.request.get_json())  # noqa: E501
             contact = DBContact(body['username'], body['first_name'], body['last_name'], body['email'], body['password'], body['phone'])
             session.add(contact)
             session.commit()
             session.refresh(contact)
-            print(contact)
             return contact.id
         except Exception as error:
             print('save to database failed')
