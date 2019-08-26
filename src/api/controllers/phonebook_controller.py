@@ -1,11 +1,11 @@
 import connexion
 import six
+import json
 
 from api import util
 from api.models.db_contact import DBContact
 from api.models.db import Session
 from flask import abort
-
 def add_contact(body):  # noqa: E501
     """Add a new contact
 
@@ -20,12 +20,11 @@ def add_contact(body):  # noqa: E501
         try:
             session = Session()
             body = connexion.request.get_json()
-            # body = DBContact.from_dict(connexion.request.get_json())  # noqa: E501
             contact = DBContact(body['username'], body['first_name'], body['last_name'], body['email'], body['password'], body['phone'])
             session.add(contact)
             session.commit()
             session.refresh(contact)
-            return contact.id
+            return json.loads(json.dumps({"id": contact.id}))
         except Exception as error:
             print('save to database failed')
             print(error)

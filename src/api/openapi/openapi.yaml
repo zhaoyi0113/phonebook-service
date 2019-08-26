@@ -35,6 +35,12 @@ paths:
         405:
           content: {}
           description: Invalid input
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactID'
+          description: successful operation
       summary: Add a new contact
       tags:
         - phonebook
@@ -200,3 +206,10 @@ components:
           format: int32
           type: integer
       type: object
+    ContactID:
+      example:
+        id: 0
+      properties:
+        id:
+          format: int64
+          type: integer

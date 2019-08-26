@@ -20,6 +20,9 @@ stages:
      status_code: 200
      headers:
       content-type: application/json
+     save:
+      body:
+        contact_id: id
   - name: Make sure we can find contact by email
     request:
       url: "{url:s}/findByEmail?email=test@email.com"
