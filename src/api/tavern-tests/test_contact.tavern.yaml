@@ -55,3 +55,17 @@ stages:
       method: DELETE
     response:
       status_code: 200
+  - name: Make sure we can't delete non existed contact
+    request:
+      url: "{url:s}/9999"
+      method: DELETE
+    response:
+      status_code: 404
+  - name: Make sure we can't update a non existed contact
+    request:
+      url: "{url:s}/9999"
+      method: PUT
+      json:
+        phone: '111111'
+    response:
+      status_code: 404

@@ -6,6 +6,7 @@ from api import util
 from api.models.db_contact import DBContact
 from api.models.db import Session
 from flask import abort
+
 def add_contact(body):  # noqa: E501
     """Add a new contact
 
@@ -48,12 +49,16 @@ def delete_contact(contact_id, api_key=None):  # noqa: E501
     print('delete contact ', contact_id)
     session = Session()
     try:
-        contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
+        query = session.query(DBContact).filter(DBContact.id == contact_id)
+        if query.count() == 0:
+            return abort(404, 'Not find record')
+        contact = query.one()
         session.delete(contact)
         session.commit()
         return 'success'
     except Exception as error:
         print(error)
+        return abort(error)
     finally:
         session.close()
     return abort(400, 'failed to delete contact ' + contact_id)
@@ -113,10 +118,12 @@ def get_contact_by_id(contact_id):  # noqa: E501
     """
     session = Session()
     try:
-        contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
+        query = session.query(DBContact).filter(DBContact.id == contact_id)
+        contact = query.one()
         return util.alchemy_to_json(contact)
     except Exception as error:
         print(error)
+        return abort(error)
     finally:
         session.close()
     return abort(400, "failed to find contact by id " + contact_id)
@@ -149,7 +156,10 @@ def update_contact_with_form(contact_id, body):
     """
     session = Session()
     try:
-        contact = session.query(DBContact).filter(DBContact.id == contact_id).one()
+        query = session.query(DBContact).filter(DBContact.id == contact_id)
+        if query.count() == 0:
+            return abort(404, 'Cannot find contact')
+        contact = query.one()
         body = connexion.request.get_json()
         for k, v in body.items():
             if v is not None:
@@ -157,8 +167,8 @@ def update_contact_with_form(contact_id, body):
         session.commit()
         return util.alchemy_to_json(contact)
     except Exception as error:
-        print('failed to update database')
         print(error)
+        return abort(error)
     finally:
         session.close()
     return abort(400, 'failed to update')
