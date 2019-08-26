@@ -9,7 +9,7 @@ WORKDIR /app
 RUN sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/alpine.global.ssl.fastly.net/g' /etc/apk/repositories
 
 # Install System run-time dependencies
-RUN apk update && apk add --no-cache uwsgi-python3 uwsgi-http uwsgi-stats_pusher_statsd ca-certificates postgresql-dev gcc python3-dev musl-dev && \
+RUN apk update && apk add --no-cache uwsgi-python3 uwsgi-http uwsgi-stats_pusher_statsd ca-certificates postgresql-dev python3-dev && \
     pip3 install --upgrade pip
 
 # Add IRESS Root CAs so we can trust our internal SSL certificates!
