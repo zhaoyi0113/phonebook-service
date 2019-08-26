@@ -18,6 +18,13 @@ stages:
       content-type: application/json
   - name: Make sure we can find contact by email
     request:
-      url: http://localhost:8080/v2/contact
+      url: http://localhost:8080/v2/contact/findByEmail?email=test@email.com
       method: GET
-      
+    response:
+      status_code: 200
+  - name: Make sure we can find contact by username
+    request:
+      url: http://localhost:8080/v2/contact/findByName?name=testUser
+      method: GET
+    response:
+      status_code: 200
