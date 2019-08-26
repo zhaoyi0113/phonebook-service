@@ -3,7 +3,6 @@ test_name: Test phonebook service
 includes:
   - !include common.yaml
 
-  
 stages:
   - name: Make sure we can create new contact
     request:
@@ -23,6 +22,10 @@ stages:
      save:
       body:
         contact_id: id
+
+---
+test_name: Test query contact
+stages:
   - name: Make sure we can find contact by email
     request:
       url: "{url:s}/findByEmail?email=test@email.com"
@@ -41,6 +44,9 @@ stages:
       method: GET
     response:
       status_code: 200
+---
+test_name: Test update contact
+stages:
   - name: Make sure we can update a contact
     request:
       url: "{url:s}/{contact_id:d}"
@@ -49,12 +55,18 @@ stages:
         phone: "222222"
     response:
       status_code: 200
+---
+test_name: Test delete contact
+stages:
   - name: Make sure we can delete a contact
     request:
       url: "{url:s}/{contact_id:d}"
       method: DELETE
     response:
       status_code: 200
+---
+test_name: Test error case
+stages:
   - name: Make sure we can't delete non existed contact
     request:
       url: "{url:s}/9999"
