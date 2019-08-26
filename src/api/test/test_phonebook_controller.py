@@ -44,74 +44,74 @@ class TestPhonebookController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
 
 
-    def test_get_contact_by_id(self):
-        """Test case for get_contact_by_id
+    # def test_get_contact_by_id(self):
+    #     """Test case for get_contact_by_id
 
-        Find contact by ID
-        """
-        headers = { 
-            'Accept': 'application/json',
-            'api_key': 'special-key',
-        }
-        response = self.client.open(
-            '/v2/contact/{contact_id}'.format(contact_id=TestPhonebookController.contact_id),
-            method='GET',
-            headers=headers)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+    #     Find contact by ID
+    #     """
+    #     headers = { 
+    #         'Accept': 'application/json',
+    #         'api_key': 'special-key',
+    #     }
+    #     response = self.client.open(
+    #         '/v2/contact/{contact_id}'.format(contact_id=TestPhonebookController.contact_id),
+    #         method='GET',
+    #         headers=headers)
+    #     self.assert200(response,
+    #                    'Response body is : ' + response.data.decode('utf-8'))
                        
-    def test_delete_contact(self):
-        """Test case for delete_contact
+    # def test_delete_contact(self):
+    #     """Test case for delete_contact
 
-        Deletes a contact
-        """
-        headers = { 
-            'api_key': 'api_key_example',
-            'Authorization': 'Bearer special-key',
-        }
-        logging.getLogger('tests').info('delete contact id ' + TestPhonebookController.contact_id)
-        response = self.client.open(
-            '/v2/contact/{contact_id}'.format(contact_id=TestPhonebookController.contact_id),
-            method='DELETE',
-            headers=headers)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+    #     Deletes a contact
+    #     """
+    #     headers = { 
+    #         'api_key': 'api_key_example',
+    #         'Authorization': 'Bearer special-key',
+    #     }
+    #     logging.getLogger('tests').info('delete contact id ' + TestPhonebookController.contact_id)
+    #     response = self.client.open(
+    #         '/v2/contact/{contact_id}'.format(contact_id=TestPhonebookController.contact_id),
+    #         method='DELETE',
+    #         headers=headers)
+    #     self.assert200(response,
+    #                    'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_find_contacts_by_email(self):
-        """Test case for find_contacts_by_email
+    # def test_find_contacts_by_email(self):
+    #     """Test case for find_contacts_by_email
 
-        Finds contact by email
-        """
-        query_string = [('email', 'email_example')]
-        headers = { 
-            'Accept': 'application/json',
-            'Authorization': 'Bearer special-key',
-        }
-        response = self.client.open(
-            '/v2/contact/findByEmail',
-            method='GET',
-            headers=headers,
-            query_string=query_string)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+    #     Finds contact by email
+    #     """
+    #     query_string = [('email', 'email_example')]
+    #     headers = { 
+    #         'Accept': 'application/json',
+    #         'Authorization': 'Bearer special-key',
+    #     }
+    #     response = self.client.open(
+    #         '/v2/contact/findByEmail',
+    #         method='GET',
+    #         headers=headers,
+    #         query_string=query_string)
+    #     self.assert200(response,
+    #                    'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_find_contacts_by_name(self):
-        """Test case for find_contacts_by_name
+    # def test_find_contacts_by_name(self):
+    #     """Test case for find_contacts_by_name
 
-        Finds Contact by name
-        """
-        query_string = [('name', 'name_example')]
-        headers = { 
-            'Accept': 'application/json',
-            'Authorization': 'Bearer special-key',
-        }
-        response = self.client.open(
-            '/v2/contact/findByName',
-            method='GET',
-            headers=headers,
-            query_string=query_string)
-        self.assert200(response,
-                       'Response body is : ' + response.data.decode('utf-8'))
+    #     Finds Contact by name
+    #     """
+    #     query_string = [('name', 'name_example')]
+    #     headers = { 
+    #         'Accept': 'application/json',
+    #         'Authorization': 'Bearer special-key',
+    #     }
+    #     response = self.client.open(
+    #         '/v2/contact/findByName',
+    #         method='GET',
+    #         headers=headers,
+    #         query_string=query_string)
+    #     self.assert200(response,
+    #                    'Response body is : ' + response.data.decode('utf-8'))
 
 
     # @unittest.skip("application/x-www-form-urlencoded not supported by Connexion")
