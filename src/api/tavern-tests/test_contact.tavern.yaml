@@ -1,9 +1,13 @@
 test_name: Test phonebook service
 
+includes:
+  - !include common.yaml
+
+  
 stages:
   - name: Make sure we can create new contact
     request:
-     url: http://localhost:8080/v2/contact
+     url: "{url:s}"
      method: POST
      json:
       username: testUser
@@ -18,13 +22,13 @@ stages:
       content-type: application/json
   - name: Make sure we can find contact by email
     request:
-      url: http://localhost:8080/v2/contact/findByEmail?email=test@email.com
+      url: "{url:s}/findByEmail?email=test@email.com"
       method: GET
     response:
       status_code: 200
   - name: Make sure we can find contact by username
     request:
-      url: http://localhost:8080/v2/contact/findByName?name=testUser
+      url: "{url:s}/findByName?name=testUser"
       method: GET
     response:
       status_code: 200
