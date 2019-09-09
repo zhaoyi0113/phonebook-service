@@ -4,8 +4,6 @@ module "api" {
 
   name                        = "${module.ci.app_name}-api"
   service_type                = "api"
-  deploy_env                  = module.ci.deploy_env
-  lob                         = "marketdata"  
   min_task_count              = var.min_task_count
   max_task_count              = var.max_task_count
   auto_scaling_up_threshold   = var.auto_scaling_up_threshold
