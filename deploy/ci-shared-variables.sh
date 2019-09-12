@@ -1,3 +1,3 @@
-APP_NAME=phonebook-service
+APP_NAME=phonebook-service-joey
 NAMESPACE=marketdata
-VERSION=1.0.${BUILDKITE_BUILD_NUMBER:-dev}
+VERSION=1.1.${BUILDKITE_BUILD_NUMBER:-dev}
